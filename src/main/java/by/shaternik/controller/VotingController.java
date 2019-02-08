@@ -21,8 +21,18 @@ public class VotingController {
 	@RequestMapping("/votings/{id}")
 	String pageVoting (@PathVariable("id") Long id, ModelMap modal){
 		Optional<Voting> voting= votingService.getById(id);
-		modal.addAttribute("message",voting.get().getQuestion());
-		return "voting";
+		if (voting.get().isEndStatus()==false){
+			modal.addAttribute("message",voting.get().getQuestion());
+			modal.addAttribute("votingId",voting.get().getId());
+			return "voting";
+		}
+		else{
+			//votingService.coutQuestions();
+
+			modal.addAttribute("question",voting.get().getQuestion());
+			modal.addAttribute("message","Статистика голосования");
+			return "statistic";
+		}
 	}
 
 	@RequestMapping("/endvoting")
@@ -31,10 +41,8 @@ public class VotingController {
 	}
 
 	@RequestMapping("/votings/voice")
-	String pageThank (@RequestParam(name="answer") Long answerType){
-		System.out.println("Voice ====="+answerType);
-
-
+	String pageThank (@RequestParam(name="answer") Integer answerType,@RequestParam(name="id") Long id){
+		votingService.addAnswer(id, answerType);
 		return "thank";
 	}
 }

@@ -1,9 +1,13 @@
 package by.shaternik.service;
 
 
+import by.shaternik.model.Answers;
 import by.shaternik.model.Voting;
+import by.shaternik.repository.AnswersRepository;
 import by.shaternik.repository.VotingRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.SessionFactory;
+import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
@@ -11,13 +15,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.*;
+import java.util.ArrayList;
 import java.util.Optional;
+import java.util.Set;
 
 @Service
 @Transactional
 @RequiredArgsConstructor (onConstructor = @__(@Autowired))
 public class VotingService {
     private final VotingRepository votingRepository;
+    private final AnswersRepository answersRepository;
+
     Logger log = LoggerFactory.getLogger(VotingService.class);
 
     public Voting add (String str) {
@@ -42,33 +51,25 @@ public class VotingService {
         return voting;
     }
 
+    public void addAnswer(Long id, Integer answerType) {
 
+        Answers answer = new Answers();
+        answer.setTypeAnswer(answerType);
+        answersRepository.save(answer);
 
-    /*  public void  save2 (Voting voting){
-        votingRepository.save(voting);
-        log.info("add DB new Voting "+ voting.getId()+" "+voting.getQuestion());
+        Optional<Voting> voting= votingRepository.findById(id);
+        if(voting.get().getAnswers().isEmpty()){
+            ArrayList <Answers> answers = new ArrayList();
+            answers.add(answer);
+            voting.get().setAnswers(answers);
+        }
+        else {
+            voting.get().getAnswers().add(answer);
+        }
+        log.info("add answer type "+answerType+" for question id= "+id);
     }
-    public Voting  save (String str){
-        Voting voting= votingRepository.save(new Voting(str));
-        log.info("add DB new Voting "+ voting.getId()+" "+voting.getQuestion());
-        return voting;
-    }
 
-    public String  save3 (String str){
-        Voting voting= votingRepository.save(new Voting(str));
-        log.info("add DB new Voting "+ voting.getId()+" "+voting.getQuestion());
-        return "blalala/nanan/"+voting.getId();
-    }
 
-    public Voting update (Long id){
-        Optional<Voting> voting = votingRepository.findById(id);
-        Voting votingNew = new Voting();
-        BeanUtils.copyProperties(voting.get(),votingNew);
 
-        votingNew.setEndStatus(true);
-        votingNew.setUrl("http://localhost:8080/votings/"+votingNew.getId());
-        votingRepository.save(votingNew);
-        return votingNew;
-    }*/
 }
 
