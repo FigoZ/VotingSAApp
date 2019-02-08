@@ -31,7 +31,8 @@ public class Voting {
     boolean endStatus;
 
 
-    @OneToMany (cascade = CascadeType.ALL)
+   // @OneToMany (cascade = CascadeType.ALL)
+    @OneToMany (mappedBy = "voting", cascade = CascadeType.ALL, orphanRemoval = true)
   //  @LazyCollection(LazyCollectionOption.FALSE)
     private List<Answers> answers;
 

@@ -23,5 +23,8 @@ public class Answers {
     @Column
     private int typeAnswer;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "id")
+    private Voting voting;
 
 }

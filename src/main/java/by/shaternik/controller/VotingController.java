@@ -21,13 +21,13 @@ public class VotingController {
 	@RequestMapping("/votings/{id}")
 	String pageVoting (@PathVariable("id") Long id, ModelMap modal){
 		Optional<Voting> voting= votingService.getById(id);
-		if (voting.get().isEndStatus()==false){
+		if (voting.get().isEndStatus()==true){
 			modal.addAttribute("message",voting.get().getQuestion());
 			modal.addAttribute("votingId",voting.get().getId());
 			return "voting";
 		}
 		else{
-			//votingService.coutQuestions();
+			votingService.countAnswers();
 
 			modal.addAttribute("question",voting.get().getQuestion());
 			modal.addAttribute("message","Статистика голосования");

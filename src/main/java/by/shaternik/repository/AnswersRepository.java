@@ -8,7 +8,7 @@ import org.springframework.data.repository.query.Param;
 
 public interface AnswersRepository extends JpaRepository <Answers, Long> {
 
-    /*@Query("SELECT count(*) FROM answers a WHERE a.voting_id = :VotingId")
+   // @Query("SELECT count(a.voting_id) FROM answers a WHERE a.voting_id = :VotingId")
    // Long countByAnswers (@Param("VotingId") Long id);
-    Long countByAnswers ();*/
+   // Long countByAnswers ();
 }

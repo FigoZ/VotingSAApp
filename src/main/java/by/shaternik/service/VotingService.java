@@ -70,6 +70,10 @@ public class VotingService {
     }
 
 
-
+    public void countAnswers() {
+        Long l = votingRepository.countByVotingIdAndTypeAnswer(2L,1);
+       // String l = votingRepository.findURL(1L);
+        System.out.println("===="+l);
+    }
 }
 
