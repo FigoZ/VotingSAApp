@@ -4,8 +4,6 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.LazyCollection;
-import org.hibernate.annotations.LazyCollectionOption;
 
 import javax.persistence.*;
 import java.util.List;
@@ -30,10 +28,7 @@ public class Voting {
     @Column
     boolean endStatus;
 
-
-   // @OneToMany (cascade = CascadeType.ALL)
     @OneToMany (mappedBy = "voting", cascade = CascadeType.ALL, orphanRemoval = true)
-  //  @LazyCollection(LazyCollectionOption.FALSE)
     private List<Answers> answers;
 
     public Voting (String question){

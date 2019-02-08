@@ -1,5 +1,6 @@
 package by.shaternik.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -23,8 +24,9 @@ public class Answers {
     @Column
     private int typeAnswer;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "id")
+    @JoinColumn(name = "voting_id")
     private Voting voting;
 
 }

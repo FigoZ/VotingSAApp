@@ -6,19 +6,15 @@ import by.shaternik.model.Voting;
 import by.shaternik.repository.AnswersRepository;
 import by.shaternik.repository.VotingRepository;
 import lombok.RequiredArgsConstructor;
-import org.hibernate.SessionFactory;
-import org.hibernate.query.Query;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.Optional;
-import java.util.Set;
+
 
 @Service
 @Transactional
@@ -43,37 +39,34 @@ public class VotingService {
         return votingRepository.findById(id);
     }
 
-    public Optional<Voting> end(Long id) {
-        Optional<Voting> voting = votingRepository.findById(id);
-
-        voting.get().setEndStatus(true);
+    public Voting end (Long id) {
+        Voting voting = votingRepository.findById(id).orElse(null);
+        voting.setEndStatus(true);
         log.info("status End of voting id= "+ id);
         return voting;
     }
 
+
     public void addAnswer(Long id, Integer answerType) {
-
-        Answers answer = new Answers();
-        answer.setTypeAnswer(answerType);
-        answersRepository.save(answer);
-
-        Optional<Voting> voting= votingRepository.findById(id);
-        if(voting.get().getAnswers().isEmpty()){
-            ArrayList <Answers> answers = new ArrayList();
-            answers.add(answer);
-            voting.get().setAnswers(answers);
+        Voting voting = votingRepository.findById(id).orElse(null);
+        if (voting != null) {
+            Answers answer = new Answers();
+            answer.setTypeAnswer(answerType);
+            answer.setVoting(voting);
+            voting.getAnswers().add(answer);
+            votingRepository.save(voting);
         }
-        else {
-            voting.get().getAnswers().add(answer);
-        }
-        log.info("add answer type "+answerType+" for question id= "+id);
+        log.info("add answer type "+answerType+ " for voting id= "+ id);
     }
 
-
-    public void countAnswers() {
-        Long l = votingRepository.countByVotingIdAndTypeAnswer(2L,1);
-       // String l = votingRepository.findURL(1L);
-        System.out.println("===="+l);
+    public ArrayList<Long> countAnswers(Long id) {
+        ArrayList<Long> arr = new ArrayList<>();
+        arr.add(answersRepository.countByVotingId(id));
+       arr.add(answersRepository.countByVotingIdAndTypeAnswer(id,1));
+       arr.add(answersRepository.countByVotingIdAndTypeAnswer(id,2));
+       arr.add(answersRepository.countByVotingIdAndTypeAnswer(id,3));
+        log.info("count statistic for voting id= "+ id);
+        return arr;
     }
 }
 

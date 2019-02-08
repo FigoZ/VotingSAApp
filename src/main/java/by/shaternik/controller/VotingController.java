@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.Optional;
 
 @Controller
@@ -21,16 +22,19 @@ public class VotingController {
 	@RequestMapping("/votings/{id}")
 	String pageVoting (@PathVariable("id") Long id, ModelMap modal){
 		Optional<Voting> voting= votingService.getById(id);
-		if (voting.get().isEndStatus()==true){
+		if (voting.get().isEndStatus()==false){
 			modal.addAttribute("message",voting.get().getQuestion());
 			modal.addAttribute("votingId",voting.get().getId());
 			return "voting";
 		}
 		else{
-			votingService.countAnswers();
+			ArrayList<Long> arr =  votingService.countAnswers(id);
 
 			modal.addAttribute("question",voting.get().getQuestion());
-			modal.addAttribute("message","Статистика голосования");
+			modal.addAttribute("allVoices",arr.get(0));
+			modal.addAttribute("answer1",arr.get(1));
+			modal.addAttribute("answer2",arr.get(2));
+			modal.addAttribute("answer3",arr.get(3));
 			return "statistic";
 		}
 	}

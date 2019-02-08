@@ -20,7 +20,7 @@ public class VotingRestController {
     }
 
     @RequestMapping("/endvotings")
-    public Optional<Voting> end(@RequestParam(value="id") Long id){
+    public Voting end(@RequestParam(value="id") Long id){
         return votingService.end(id);
     }
 
